@@ -1,0 +1,160 @@
+ood_expiry_risk_synthetic_dataset.csv(text/csv) - 19505 bytes, last modified: 25/11/2026 - 100% done
+Saving food_expiry_risk_synthetic_dataset.csv to food_expiry_risk_synthetic_dataset.csv
+FIRST FIVE ROWS:
+  Food_Category  Days_Since_Purchase  Shelf_Life_Days  Storage_Temperature_C  \
+0      Packaged                   12                3                   16.3   
+1         Dairy                   12               25                    4.3   
+2        Fruits                   14               30                   31.2   
+3        Bakery                    2                3                   20.6   
+4         Dairy                    7                6                    5.2   
+
+   Storage_Humidity_Percent Storage_Condition  Expiry_Risk  
+0                      64.4            Proper            1  
+1                      49.1            Proper            0  
+2                      74.3          Improper            1  
+3                      47.3            Proper            1  
+4                      73.7            Proper            1  
+
+DATASET SHAPE:
+(600, 7)
+
+DATASET INFORMATION:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 600 entries, 0 to 599
+Data columns (total 7 columns):
+ #   Column                    Non-Null Count  Dtype  
+---  ------                    --------------  -----  
+ 0   Food_Category             600 non-null    object 
+ 1   Days_Since_Purchase       600 non-null    int64  
+ 2   Shelf_Life_Days           600 non-null    int64  
+ 3   Storage_Temperature_C     600 non-null    float64
+ 4   Storage_Humidity_Percent  600 non-null    float64
+ 5   Storage_Condition         600 non-null    object 
+ 6   Expiry_Risk               600 non-null    int64  
+dtypes: float64(2), int64(3), object(2)
+memory usage: 32.9+ KB
+
+STATISTICAL SUMMARY:
+       Food_Category  Days_Since_Purchase  Shelf_Life_Days  \
+count            600           600.000000       600.000000   
+unique             5                  NaN              NaN   
+top            Dairy                  NaN              NaN   
+freq             132                  NaN              NaN   
+mean             NaN             7.156667        16.463333   
+std              NaN             4.275424         8.263926   
+min              NaN             0.000000         2.000000   
+25%              NaN             4.000000         9.000000   
+50%              NaN             7.000000        17.000000   
+75%              NaN            11.000000        24.000000   
+max              NaN            14.000000        30.000000   
+
+        Storage_Temperature_C  Storage_Humidity_Percent Storage_Condition  \
+count              600.000000                600.000000               600   
+unique                    NaN                       NaN                 2   
+top                       NaN                       NaN            Proper   
+freq                      NaN                       NaN               435   
+mean                15.036333                 61.749833               NaN   
+std                  7.508209                 18.770768               NaN   
+min                 -0.900000                 30.000000               NaN   
+25%                  8.875000                 46.050000               NaN   
+50%                 15.850000                 61.150000               NaN   
+75%                 20.500000                 76.825000               NaN   
+max                 33.800000                 95.000000               NaN   
+
+        Expiry_Risk  
+count    600.000000  
+unique          NaN  
+top             NaN  
+freq            NaN  
+mean       0.311667  
+std        0.463561  
+min        0.000000  
+25%        0.000000  
+50%        0.000000  
+75%        1.000000  
+max        1.000000  
+
+MISSING VALUES:
+Food_Category               0
+Days_Since_Purchase         0
+Shelf_Life_Days             0
+Storage_Temperature_C       0
+Storage_Humidity_Percent    0
+Storage_Condition           0
+Expiry_Risk                 0
+dtype: int64
+
+
+INPUT FEATURES:
+  Food_Category  Days_Since_Purchase  Shelf_Life_Days  Storage_Temperature_C  \
+0      Packaged                   12                3                   16.3   
+1         Dairy                   12               25                    4.3   
+2        Fruits                   14               30                   31.2   
+3        Bakery                    2                3                   20.6   
+4         Dairy                    7                6                    5.2   
+
+   Storage_Humidity_Percent Storage_Condition  
+0                      64.4            Proper  
+1                      49.1            Proper  
+2                      74.3          Improper  
+3                      47.3            Proper  
+4                      73.7            Proper  
+
+TARGET VARIABLE:
+0    1
+1    0
+2    1
+3    1
+4    1
+Name: Expiry_Risk, dtype: int64
+
+Training Data: (480, 6)
+Testing Data: (120, 6)
+
+Model Training Completed Successfully!
+
+ACTUAL VALUES:
+[0 0 0 1 0 1 0 1 1 1]
+
+PREDICTED VALUES:
+[0 0 0 1 0 1 0 1 0 1]
+
+MODEL EVALUATION:
+Accuracy: 0.95
+Precision: 0.8974358974358975
+Recall: 0.9459459459459459
+F1 Score: 0.9210526315789473
+
+CLASSIFICATION REPORT:
+              precision    recall  f1-score   support
+
+           0       0.98      0.95      0.96        83
+           1       0.90      0.95      0.92        37
+
+    accuracy                           0.95       120
+   macro avg       0.94      0.95      0.94       120
+weighted avg       0.95      0.95      0.95       120
+
+
+
+
+NEW FOOD ITEM DETAILS:
+  Food_Category  Days_Since_Purchase  Shelf_Life_Days  Storage_Temperature_C  \
+0         Dairy                    5                7                   12.0   
+
+   Storage_Humidity_Percent Storage_Condition  
+0                      80.0          Improper
+
+
+NEW FOOD ITEM DETAILS:
+  Food_Category  Days_Since_Purchase  Shelf_Life_Days  Storage_Temperature_C  \
+0         Dairy                    5                7                   12.0   
+
+   Storage_Humidity_Percent Storage_Condition  
+0                      80.0          Improper  
+
+PREDICTION:
+Food item is classified as AT RISK.
+Predicted Risk Probability: 86.35 %
+
+PROJECT COMPLETED SUCCESSFULLY!
