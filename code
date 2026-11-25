@@ -1,0 +1,258 @@
+
+# FOOD WASTE AND EXPIRY PREDICTION SYSTEM
+# Machine Learning Algorithm: Logistic Regression
+
+# 1. Import Libraries
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from google.colab import files
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    confusion_matrix,
+    classification_report
+)
+
+# 2. Upload Dataset
+
+uploaded = files.upload()
+
+df = pd.read_csv('food_expiry_risk_synthetic_dataset.csv')
+
+# 3. Display Dataset
+
+print("FIRST FIVE ROWS:")
+print(df.head())
+
+print("\nDATASET SHAPE:")
+print(df.shape)
+
+print("\nDATASET INFORMATION:")
+df.info()
+
+print("\nSTATISTICAL SUMMARY:")
+print(df.describe(include='all'))
+
+print("\nMISSING VALUES:")
+print(df.isnull().sum())
+
+# 4. Handle Missing Values
+
+# Fill numerical missing values with median
+numerical_cols = df.select_dtypes(
+    include=np.number
+).columns.drop('Expiry_Risk')
+
+for col in numerical_cols:
+    df[col] = df[col].fillna(df[col].median())
+
+# Fill categorical missing values with mode
+categorical_cols = df.select_dtypes(
+    include='object'
+).columns
+
+for col in categorical_cols:
+    df[col] = df[col].fillna(df[col].mode()[0])
+
+# 5. Visualize Target Distribution
+
+plt.figure(figsize=(6,4))
+
+sns.countplot(
+    x='Expiry_Risk',
+    data=df
+)
+
+plt.title("Food Expiry Risk Distribution")
+plt.xlabel("Expiry Risk (0 = No, 1 = Yes)")
+plt.ylabel("Number of Food Items")
+plt.show()
+
+# 6. Select Input and Target Variables
+
+X = df.drop('Expiry_Risk', axis=1)
+
+y = df['Expiry_Risk']
+
+print("\nINPUT FEATURES:")
+print(X.head())
+
+print("\nTARGET VARIABLE:")
+print(y.head())
+
+# 7. Identify Numerical and Categorical Columns
+
+numerical_features = X.select_dtypes(
+    include=np.number
+).columns.tolist()
+
+categorical_features = X.select_dtypes(
+    include='object'
+).columns.tolist()
+
+# 8. Preprocess Data
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', StandardScaler(), numerical_features),
+        ('cat', OneHotEncoder(handle_unknown='ignore'),
+         categorical_features)
+    ]
+)
+
+# 9. Split Dataset
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+print("\nTraining Data:", X_train.shape)
+print("Testing Data:", X_test.shape)
+
+# 10. Create Logistic Regression Pipeline
+
+model = Pipeline([
+    ('preprocessor', preprocessor),
+    ('classifier', LogisticRegression(max_iter=1000))
+])
+
+# 11. Train Model
+
+model.fit(X_train, y_train)
+
+print("\nModel Training Completed Successfully!")
+
+# 12. Make Predictions
+
+y_pred = model.predict(X_test)
+
+print("\nACTUAL VALUES:")
+print(y_test.head(10).values)
+
+print("\nPREDICTED VALUES:")
+print(y_pred[:10])
+
+# 13. Evaluate Model
+
+accuracy = accuracy_score(y_test, y_pred)
+
+precision = precision_score(
+    y_test, y_pred, zero_division=0
+)
+
+recall = recall_score(
+    y_test, y_pred, zero_division=0
+)
+
+f1 = f1_score(
+    y_test, y_pred, zero_division=0
+)
+
+print("\nMODEL EVALUATION:")
+
+print("Accuracy:", accuracy)
+print("Precision:", precision)
+print("Recall:", recall)
+print("F1 Score:", f1)
+
+# 14. Classification Report
+
+print("\nCLASSIFICATION REPORT:")
+print(classification_report(
+    y_test, y_pred,
+    zero_division=0
+))
+
+# 15. Confusion Matrix
+
+cm = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(6,4))
+
+sns.heatmap(
+    cm,
+    annot=True,
+    fmt='d',
+    cmap='Blues',
+    xticklabels=['Not at Risk', 'At Risk'],
+    yticklabels=['Not at Risk', 'At Risk']
+)
+
+plt.xlabel("Predicted Values")
+plt.ylabel("Actual Values")
+plt.title("Confusion Matrix")
+
+plt.show()
+
+# 16. Actual vs Predicted Graph
+
+plt.figure(figsize=(8,4))
+
+plt.scatter(
+    range(len(y_test)),
+    y_test.values,
+    label='Actual',
+    alpha=0.7
+)
+
+plt.scatter(
+    range(len(y_pred)),
+    y_pred,
+    label='Predicted',
+    alpha=0.7
+)
+
+plt.xlabel("Test Samples")
+plt.ylabel("Expiry Risk")
+plt.title("Actual vs Predicted Expiry Risk")
+plt.legend()
+plt.show()
+
+# 17. Predict Expiry Risk for New Food Item
+
+new_food = pd.DataFrame({
+    'Food_Category': ['Dairy'],
+    'Days_Since_Purchase': [5],
+    'Shelf_Life_Days': [7],
+    'Storage_Temperature_C': [12.0],
+    'Storage_Humidity_Percent': [80.0],
+    'Storage_Condition': ['Improper']
+})
+
+prediction = model.predict(new_food)
+
+probability = model.predict_proba(new_food)
+
+print("\nNEW FOOD ITEM DETAILS:")
+print(new_food)
+
+print("\nPREDICTION:")
+
+if prediction[0] == 1:
+    print("Food item is classified as AT RISK.")
+else:
+    print("Food item is classified as NOT AT RISK.")
+
+print(
+    "Predicted Risk Probability:",
+    round(probability[0][1] * 100, 2), "%"
+)
+
+print("\nPROJECT COMPLETED SUCCESSFULLY!")
